@@ -1,13 +1,28 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import Component from 'vue-class-component';
+
+@Component
+export default class App extends Vue {
+  private created() {
+    firebase.auth().onAuthStateChanged(async (user: any) => {
+      if (user) {
+        await this.$router.push('/home');
+      } else {
+        await this.$router.push('/login');
+      }
+    });
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
